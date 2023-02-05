@@ -1,7 +1,7 @@
 package com.study.iocjava.service;
 
 import com.study.iocjava.domain.Customer;
-import com.study.iocjava.notification.NotifyEmail;
+import com.study.iocjava.notification.Notify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -9,17 +9,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ActiveCustomerService {
 
-    private NotifyEmail notifyEmail;
     private final Logger logger = LoggerFactory.getLogger(ActiveCustomerService.class);
+    private final Notify notify;
 
-    public ActiveCustomerService() {
-        logger.info("Constructor \"{}\" called.", ActiveCustomerService.class);
+    public ActiveCustomerService(Notify notify) {
+        logger.info("Constructor \"{}\" called", ActiveCustomerService.class);
+        this.notify = notify;
     }
 
     public void active(Customer customer) {
         customer.active();
-        logger.info("Activated user.");
+        logger.warn("Activated user \"{}\"", customer);
 
-        notifyEmail.notify(customer, "Your registration in the system is active.");
+        notify.sendNotification(customer, "Your account in the system is active");
     }
 }
